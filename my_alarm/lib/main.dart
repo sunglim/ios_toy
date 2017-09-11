@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(new MyApp());
+  //runApp(new MainDialog());
+  runApp(new MaterialApp(
+    home: new MainDialog(),
+	routes: <String, WidgetBuilder>{
+	  "/mytabs": (BuildContext context) => AddNewAlarmDialog(),
+	},
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Flutter Demo',
-      home: new Scaffold(
-        appBar: new AppBar(
-          backgroundColor: Colors.grey[850],
-          leading: new Center(
-            child: new Text('Edit'),
-          ),
-          title: new Text('Alarm'),
-          actions: <Widget>[
-            new IconButton(
-              color: Colors.amber[900],
-              icon: new Icon(Icons.add),
-              tooltip: 'Add new alarm',
-              onPressed: () {},
-            ),
-          ],
-        ),
-        body: new ListView(
-          children: [
-            new AlarmItem(),
-          ],
-        ),
-      ),
-    );
-  }
+
+enum DismissDialogAction {
+  cancel,
+  discard,
+  save,
 }
 
 class AlarmItem extends StatelessWidget {
@@ -102,7 +84,9 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
             color: Colors.amber[900],
             icon: new Icon(Icons.add),
             tooltip: 'Save',
-            onPressed: () {},
+            onPressed: () {
+			  Navigator.pop(context, DismissDialogAction.save);
+			},
           ),
         ],
       ),
@@ -115,3 +99,45 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
     );
   }
 }
+
+class MainDialog extends StatefulWidget {
+  @override
+  MainDialogState createState() => new MainDialogState();
+}
+
+class MainDialogState extends State<MainDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      home: new Scaffold(
+        appBar: new AppBar(
+          backgroundColor: Colors.grey[850],
+          leading: new Center(
+            child: new Text('Edit'),
+          ),
+          title: new Text('Alarm'),
+          actions: <Widget>[
+            new IconButton(
+              color: Colors.amber[900],
+              icon: new Icon(Icons.add),
+              tooltip: 'Add new alarm',
+              onPressed: () {
+		        Navigator.push(context, new MaterialPageRoute<DismissDialogAction>(
+				  builder: (BuildContext context) => new AddNewAlarmDialog(),
+				  fullscreenDialog: true,
+				));
+			  },
+            ),
+          ],
+        ),
+        body: new ListView(
+          children: [
+            new AlarmItem(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
