@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -68,6 +70,14 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
   String _sound = 'Radar';
   bool _snooze = false;
 
+  Future<Null> _selectTime(BuildContext context) async {
+    TimeOfDay currentTime = new TimeOfDay.now();
+    await showTimePicker(
+        context: context,
+        initialTime: new TimeOfDay(
+            hour: currentTime.hour, minute: currentTime.minute + 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -80,16 +90,21 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
           title: new Text('Add Alarm'),
           actions: <Widget>[
             new RaisedButton(
-              child: const Text('Save'),
-              onPressed: () {
-                Navigator.pop(context, DismissDialogAction.save);
-              }
-            )
+                child: const Text('Save'),
+                onPressed: () {
+                  Navigator.pop(context, DismissDialogAction.save);
+                })
           ],
         ),
         body: new Form(
           child: new ListView(
-            children: [],
+            children: [
+              new RaisedButton(
+                  child: const Text("time picker"),
+                  onPressed: () {
+                    _selectTime(context);
+                  })
+            ],
           ),
         ));
   }
