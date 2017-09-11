@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  //runApp(new MainDialog());
   runApp(new MaterialApp(
     home: new MainDialog(),
-	routes: <String, WidgetBuilder>{
-	  "/mytabs": (BuildContext context) => AddNewAlarmDialog(),
-	},
+    routes: <String, WidgetBuilder>{
+      "/mytabs": (BuildContext context) => AddNewAlarmDialog(),
+    },
   ));
 }
-
 
 enum DismissDialogAction {
   cancel,
@@ -73,30 +71,27 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        backgroundColor: Colors.grey[850],
-        leading: new Center(
-          child: new Text('Cancel'),
-        ),
-        title: new Text('Add Alarm'),
-        actions: <Widget>[
-          new IconButton(
-            color: Colors.amber[900],
-            icon: new Icon(Icons.add),
-            tooltip: 'Save',
-            onPressed: () {
-			  Navigator.pop(context, DismissDialogAction.save);
-			},
+        appBar: new AppBar(
+          backgroundColor: Colors.grey[850],
+          leading: new Center(
+            child: new Text('Cancel'),
           ),
-        ],
-      ),
-      body: new Form(
-        onWillPop: _onWillPop,
-        child: new ListView(
-          children: [],
+          //  Navigator.pop(context, DismissDialogAction.save);
+          title: new Text('Add Alarm'),
+          actions: <Widget>[
+            new RaisedButton(
+              child: const Text('Save'),
+              onPressed: () {
+                Navigator.pop(context, DismissDialogAction.save);
+              }
+            )
+          ],
         ),
-      )
-    );
+        body: new Form(
+          child: new ListView(
+            children: [],
+          ),
+        ));
   }
 }
 
@@ -123,11 +118,14 @@ class MainDialogState extends State<MainDialog> {
               icon: new Icon(Icons.add),
               tooltip: 'Add new alarm',
               onPressed: () {
-		        Navigator.push(context, new MaterialPageRoute<DismissDialogAction>(
-				  builder: (BuildContext context) => new AddNewAlarmDialog(),
-				  fullscreenDialog: true,
-				));
-			  },
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute<DismissDialogAction>(
+                      builder: (BuildContext context) =>
+                          new AddNewAlarmDialog(),
+                      fullscreenDialog: true,
+                    ));
+              },
             ),
           ],
         ),
@@ -140,4 +138,3 @@ class MainDialogState extends State<MainDialog> {
     );
   }
 }
-
