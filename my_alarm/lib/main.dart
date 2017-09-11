@@ -83,10 +83,12 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
     return new Scaffold(
         appBar: new AppBar(
           backgroundColor: Colors.grey[850],
-          leading: new Center(
-            child: new Text('Cancel'),
+          leading: new RaisedButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context, DismissDialogAction.cancel);
+            }
           ),
-          //  Navigator.pop(context, DismissDialogAction.save);
           title: new Text('Add Alarm'),
           actions: <Widget>[
             new RaisedButton(
