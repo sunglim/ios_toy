@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(new MyApp());
+  runApp(new MyAppMain());
 }
 
-class MyApp extends StatelessWidget {
+enum DismissDialogAction {
+  cancel,
+  discard,
+  save,
+}
+
+class MyAppMain extends StatefulWidget {
+  @override
+  MyAppMainState createState() => new MyAppMainState();
+}
+
+class MyAppMainState extends State<MyAppMain> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -21,7 +32,15 @@ class MyApp extends StatelessWidget {
               color: Colors.amber[900],
               icon: new Icon(Icons.add),
               tooltip: 'Add new alarm',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute<DismissDialogAction>(
+                      builder: (BuildContext context) =>
+                          new AddNewAlarmDialog(),
+                      fullscreenDialog: true,
+                    ));
+              },
             ),
           ],
         ),
@@ -88,30 +107,33 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
   String _sound = 'Radar';
   bool _snooze = false;
 
+  Future<bool> _onWillPop() async {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        backgroundColor: Colors.grey[850],
-        leading: new Center(
-          child: new Text('Cancel'),
-        ),
-        title: new Text('Add Alarm'),
-        actions: <Widget>[
-          new IconButton(
-            color: Colors.amber[900],
-            icon: new Icon(Icons.add),
-            tooltip: 'Save',
-            onPressed: () {},
+        appBar: new AppBar(
+          backgroundColor: Colors.grey[850],
+          leading: new Center(
+            child: new Text('Cancel'),
           ),
-        ],
-      ),
-      body: new Form(
-        onWillPop: _onWillPop,
-        child: new ListView(
-          children: [],
+          title: new Text('Add Alarm'),
+          actions: <Widget>[
+            new IconButton(
+              color: Colors.amber[900],
+              icon: new Icon(Icons.add),
+              tooltip: 'Save',
+              onPressed: () {},
+            ),
+          ],
         ),
-      )
-    );
+        body: new Form(
+          onWillPop: _onWillPop,
+          child: new ListView(
+            children: [],
+          ),
+        ));
   }
 }
