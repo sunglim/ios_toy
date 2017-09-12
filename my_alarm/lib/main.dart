@@ -69,13 +69,19 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
   String _label = 'Alarm';
   String _sound = 'Radar';
   bool _snooze = false;
+  TimeOfDay currentTime = new TimeOfDay.now();
+  ValueChanged<TimeOfDay> selectTime;
 
   Future<Null> _selectTime(BuildContext context) async {
-    TimeOfDay currentTime = new TimeOfDay.now();
-    await showTimePicker(
+    final TimeOfDay picked = await showTimePicker(
         context: context,
         initialTime: new TimeOfDay(
             hour: currentTime.hour, minute: currentTime.minute + 1));
+    if (picked != null) {
+      setState(() {
+        currentTime = picked;
+      });
+    }
   }
 
   @override
@@ -83,15 +89,14 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
     return new Scaffold(
         appBar: new AppBar(
           backgroundColor: Colors.grey[850],
-          leading: new RaisedButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context, DismissDialogAction.cancel);
-            }
-          ),
+          leading: new FlatButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context, DismissDialogAction.cancel);
+              }),
           title: new Text('Add Alarm'),
           actions: <Widget>[
-            new RaisedButton(
+            new FlatButton(
                 child: const Text('Save'),
                 onPressed: () {
                   Navigator.pop(context, DismissDialogAction.save);
@@ -102,10 +107,95 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
           child: new ListView(
             children: [
               new RaisedButton(
-                  child: const Text("time picker"),
+                  child: new Text(currentTime.toString(),
+                      style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.5
+                      )),
+                  color: Colors.grey[850],
                   onPressed: () {
                     _selectTime(context);
-                  })
+                  }),
+              new RaisedButton(
+                  child: new Row(
+                    children: [
+                      new Text(
+                        'Repeat',
+                        style: new TextStyle(
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      new Expanded(
+                        child: new Text('Never >',
+                            style: new TextStyle(
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.right),
+                      ),
+                    ],
+                  ),
+                  color: Colors.grey[850],
+                  onPressed: () {}),
+              new RaisedButton(
+                  child: new Row(
+                    children: [
+                      new Text(
+                        'Lable',
+                        style: new TextStyle(
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      new Expanded(
+                        child: new Text('Alarm >',
+                            style: new TextStyle(
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.right),
+                      ),
+                    ],
+                  ),
+                  color: Colors.grey[850],
+                  onPressed: () {}),
+              new RaisedButton(
+                  child: new Row(
+                    children: [
+                      new Text(
+                        'Sound',
+                        style: new TextStyle(
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      new Expanded(
+                        child: new Text('Never >',
+                            style: new TextStyle(
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.right),
+                      ),
+                    ],
+                  ),
+                  color: Colors.grey[850],
+                  onPressed: () {}),
+              new RaisedButton(
+                  child: new Row(
+                    children: [
+                      new Text(
+                        'Snooze',
+                        style: new TextStyle(
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      new Expanded(
+                        child: new Text('Never >',
+                            style: new TextStyle(
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.right),
+                      ),
+                    ],
+                  ),
+                  color: Colors.grey[850],
+                  onPressed: () {}),
             ],
           ),
         ));
