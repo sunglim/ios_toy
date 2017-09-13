@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -217,9 +217,8 @@ class MainDialogState extends State<MainDialog> {
   }
 
   Future<Null> _checkForUpdates() async {
-    Directory documentsDirectory = await PathProvider.getApplicationDocumentsDirectory();
-    //String path = join(documentsDirectory.path, "demo.db");
-    //print(path);
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    print(documentsDirectory);
   }
 
   @override
