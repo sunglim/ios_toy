@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -108,10 +111,8 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
             children: [
               new RaisedButton(
                   child: new Text(currentTime.toString(),
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.5
-                      )),
+                      style:
+                          new TextStyle(color: Colors.white, fontSize: 30.5)),
                   color: Colors.grey[850],
                   onPressed: () {
                     _selectTime(context);
@@ -208,6 +209,19 @@ class MainDialog extends StatefulWidget {
 }
 
 class MainDialogState extends State<MainDialog> {
+  @override
+  void initState() {
+    super.initState();
+    print("create db");
+    _checkForUpdates();
+  }
+
+  Future<Null> _checkForUpdates() async {
+    Directory documentsDirectory = await PathProvider.getApplicationDocumentsDirectory();
+    //String path = join(documentsDirectory.path, "demo.db");
+    //print(path);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
