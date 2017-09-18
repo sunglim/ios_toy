@@ -217,17 +217,21 @@ class MainDialogState extends State<MainDialog> {
   }
 
   Future<Null> _HandleInitDatabase() async {
-    String path = "";
-    try {
-      path = _initDeleteDb("test.db");
-    } catch (e) {}
-    print(path);
-    Database db = await openDatabase(path);
-    await db.execute(
-        "CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
-    print("create table");
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "demo.db");
 
-    // [VERBOSE-2:dart_error.cc(16)] Unhandled exception:g
+    // Delete the database
+    deleteDatabase(path);
+
+    // open the database
+    Database database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+          // When creating the db, create the table
+          await db.execute(
+              "CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
+        });
+
+    // Insert some records in a transaction
     await database.inTransaction(() async {
       int id1 = await database.rawInsert(
           'INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)');
@@ -237,6 +241,8 @@ class MainDialogState extends State<MainDialog> {
           ["another name", 12345678, 3.1416]);
       print("inserted2: $id2");
     });
+    List<Map> list = await database.rawQuery('SELECT * FROM Test');
+    print(list);
   }
 
   Future<String> _initDeleteDb(String dbName) async {
