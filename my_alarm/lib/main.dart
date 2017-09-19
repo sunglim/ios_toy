@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+
+import 'alarm_data_model.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -213,45 +212,10 @@ class MainDialogState extends State<MainDialog> {
   @override
   void initState() {
     super.initState();
-    _HandleInitDatabase();
-  }
-
-  Future<Null> _HandleInitDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "demo.db");
-
-    // Delete the database
-    deleteDatabase(path);
-
-    // open the database
-    Database database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-          // When creating the db, create the table
-          await db.execute(
-              "CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
-        });
-
-    // Insert some records in a transaction
-    await database.inTransaction(() async {
-      int id1 = await database.rawInsert(
-          'INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)');
-      print("inserted1: $id1");
-      int id2 = await database.rawInsert(
-          'INSERT INTO Test(name, value, num) VALUES(?, ?, ?)',
-          ["another name", 12345678, 3.1416]);
-      print("inserted2: $id2");
+    AlarmDataModel data_model = new AlarmDataModel();
+    data_model.Init().then((_) {
+      data_model.Insert("nike", 10);
     });
-    List<Map> list = await database.rawQuery('SELECT * FROM Test');
-    print(list);
-  }
-
-  Future<String> _initDeleteDb(String dbName) async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    print(documentsDirectory);
-
-    String path = join(documentsDirectory.path, dbName);
-    await deleteDatabase(path);
-    return path;
   }
 
   @override
