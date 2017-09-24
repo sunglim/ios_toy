@@ -5,12 +5,6 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class AlarmData {
-  String x;
-  int y;
-  const AlarmData(this.x, this.y);
-}
-
 class AlarmDataModel {
   Database _database;
   // Setup all necesary settings.
@@ -46,11 +40,5 @@ class AlarmDataModel {
           'INSERT INTO ALARMS(name, value, num) VALUES("some name", $data, 456.789)');
       print("inserted1: $id1");
     });
-  }
-
-  Future<List<AlarmData>> SelectAll() async {
-    //List<Map> list = await database.rawQuery('SELECT * FROM Test');
-    //print(list);
-    return Null;
   }
 }

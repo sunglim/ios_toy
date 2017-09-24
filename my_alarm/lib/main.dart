@@ -14,12 +14,6 @@ void main() {
   ));
 }
 
-enum DismissDialogAction {
-  cancel,
-  discard,
-  save,
-}
-
 class AlarmItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -95,14 +89,17 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
           leading: new FlatButton(
               child: const Text('Cancel'),
               onPressed: () {
-                Navigator.pop(context, DismissDialogAction.cancel);
+                Navigator.pop(context, null);
               }),
           title: new Text('Add Alarm'),
           actions: <Widget>[
             new FlatButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  Navigator.pop(context, DismissDialogAction.save);
+                  Map<String, dynamic> currentData = <String, dynamic>{};
+                  currentData["time_of_day"] = currentTime;
+                  currentData["y"] = 10;
+                  Navigator.pop(context, currentData);
                 })
           ],
         ),
@@ -218,6 +215,17 @@ class MainDialogState extends State<MainDialog> {
     });
   }
 
+  Future<Map<String, dynamic>> _openAlarmDialog() async {
+    Map<String, dynamic> selected_action = await Navigator.push(
+        context,
+        new MaterialPageRoute<Map<String, dynamic>>(
+          builder: (BuildContext context) => new AddNewAlarmDialog(),
+          fullscreenDialog: true,
+        ));
+    print(selected_action);
+    return selected_action;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -235,13 +243,7 @@ class MainDialogState extends State<MainDialog> {
               icon: new Icon(Icons.add),
               tooltip: 'Add new alarm',
               onPressed: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute<DismissDialogAction>(
-                      builder: (BuildContext context) =>
-                          new AddNewAlarmDialog(),
-                      fullscreenDialog: true,
-                    ));
+                _openAlarmDialog();
               },
             ),
           ],
