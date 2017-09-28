@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'alarm_data_model.dart';
+import 'alarm_item.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -12,48 +13,6 @@ void main() {
       "/mytabs": (BuildContext context) => AddNewAlarmDialog(),
     },
   ));
-}
-
-class AlarmItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      color: Colors.grey[850],
-      padding: const EdgeInsets.all(32.0),
-      child: new Row(
-        children: [
-          new Expanded(
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                new Container(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: new Text(
-                    '5:03 AM',
-                    style: new TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                new Text(
-                  'Alarm. Fri Sat',
-                  style: new TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // TODO(sungguk): Use CurpertinoSwitch instead.
-          new Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          new Text('33'),
-        ],
-      ),
-    );
-  }
 }
 
 class AddNewAlarmDialog extends StatefulWidget {
@@ -208,13 +167,15 @@ class MainDialog extends StatefulWidget {
 class MainDialogState extends State<MainDialog> {
   AlarmDataModel _data_model = new AlarmDataModel();
 
+  List<AlarmItem> alarm_items = <AlarmItem>[];
+
   @override
   void initState() {
     super.initState();
     _data_model.Init().then((_) {
-        _data_model.SelectAll().then((out) {
-            print(out);
-        });
+      _data_model.SelectAll().then((out) {
+        print(out);
+      });
     });
   }
 
@@ -226,14 +187,28 @@ class MainDialogState extends State<MainDialog> {
           fullscreenDialog: true,
         ));
 
-    _data_model.Insert(selected_action["time_of_day"].toString(), selected_action["y"]);
+    _data_model.Insert(
+        selected_action["time_of_day"].toString(), selected_action["y"]);
+    setState(() {
+      print("set state claled");
+      alarm_items = [
+        new AlarmItem(new AlarmData("14:00 AM", 10)),
+        new AlarmItem(new AlarmData("09:00 PM", 20))
+      ];
+    });
     return selected_action;
+  }
+
+  List<AlarmItem> _getAllItemFromData() {
+    final List<AlarmItem> alarm_items = [
+      new AlarmItem(new AlarmData("14:00 AM", 10)),
+      new AlarmItem(new AlarmData("09:00 PM", 20))
+    ];
+    return alarm_items;
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Build called");
-    // TODO(sungguk): Dynamically update
     return new MaterialApp(
       title: 'Flutter Demo',
       home: new Scaffold(
@@ -255,9 +230,7 @@ class MainDialogState extends State<MainDialog> {
           ],
         ),
         body: new ListView(
-          children: [
-            new AlarmItem(),
-          ],
+          children: alarm_items,
         ),
       ),
     );
