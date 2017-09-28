@@ -206,12 +206,15 @@ class MainDialog extends StatefulWidget {
 }
 
 class MainDialogState extends State<MainDialog> {
+  AlarmDataModel _data_model = new AlarmDataModel();
+
   @override
   void initState() {
     super.initState();
-    AlarmDataModel data_model = new AlarmDataModel();
-    data_model.Init().then((_) {
-      data_model.Insert("nike", 10);
+    _data_model.Init().then((_) {
+        _data_model.SelectAll().then((out) {
+            print(out);
+        });
     });
   }
 
@@ -222,12 +225,15 @@ class MainDialogState extends State<MainDialog> {
           builder: (BuildContext context) => new AddNewAlarmDialog(),
           fullscreenDialog: true,
         ));
-    print(selected_action);
+
+    _data_model.Insert(selected_action["time_of_day"].toString(), selected_action["y"]);
     return selected_action;
   }
 
   @override
   Widget build(BuildContext context) {
+    print("Build called");
+    // TODO(sungguk): Dynamically update
     return new MaterialApp(
       title: 'Flutter Demo',
       home: new Scaffold(
