@@ -23,7 +23,6 @@ class AlarmDataModel {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "alarms.db");
 
-    print('try open');
     // Delete the database
     //deleteDatabase(path);
     //return;
@@ -31,7 +30,6 @@ class AlarmDataModel {
     // Check database.
     Database database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      print('oncreated');
       await db.execute(
           "CREATE TABLE IF NOT EXISTS ALARMS (id INTEGER PRIMARY KEY, name TEXT, value INTEGER)");
     });

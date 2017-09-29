@@ -169,14 +169,22 @@ class MainDialogState extends State<MainDialog> {
 
   final List<AlarmItem> _alarm_items = <AlarmItem>[];
 
+  Future<Null> _loadAlarmData() async {
+    await _data_model.Init();
+    List<AlarmItem> alarm_items = <AlarmItem>[];
+    _data_model.SelectAll().then((out) {
+      out.forEach((element) {
+        _alarm_items.add(new AlarmItem(
+            new AlarmData(element["name"].toString(), element["id"])));
+      });
+    });
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    _data_model.Init().then((_) {
-      _data_model.SelectAll().then((out) {
-        print(out);
-      });
-    });
+    _loadAlarmData();
   }
 
   Future<Map<String, dynamic>> _openAlarmDialog() async {
