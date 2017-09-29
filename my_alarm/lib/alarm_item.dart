@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 class AlarmData {
   AlarmData(String time, int what)
-    : time = time, what = what;
+      : time = time,
+        what = what;
   final String time;
   final int what;
 }
 
 class AlarmItem extends StatelessWidget {
   AlarmItem(AlarmData alarm_data) : _alarm_data = alarm_data;
-  
+
   AlarmData _alarm_data;
 
   @override
@@ -29,6 +30,7 @@ class AlarmItem extends StatelessWidget {
                     _alarm_data.time,
                     style: new TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Colors.grey[500],
                     ),
                   ),
                 ),
@@ -52,4 +54,3 @@ class AlarmItem extends StatelessWidget {
     );
   }
 }
-

@@ -167,7 +167,7 @@ class MainDialog extends StatefulWidget {
 class MainDialogState extends State<MainDialog> {
   AlarmDataModel _data_model = new AlarmDataModel();
 
-  List<AlarmItem> alarm_items = <AlarmItem>[];
+  final List<AlarmItem> _alarm_items = <AlarmItem>[];
 
   @override
   void initState() {
@@ -190,21 +190,10 @@ class MainDialogState extends State<MainDialog> {
     _data_model.Insert(
         selected_action["time_of_day"].toString(), selected_action["y"]);
     setState(() {
-      print("set state claled");
-      alarm_items = [
-        new AlarmItem(new AlarmData("14:00 AM", 10)),
-        new AlarmItem(new AlarmData("09:00 PM", 20))
-      ];
+      _alarm_items.add(new AlarmItem(new AlarmData(
+          selected_action["time_of_day"].toString(), selected_action["y"])));
     });
     return selected_action;
-  }
-
-  List<AlarmItem> _getAllItemFromData() {
-    final List<AlarmItem> alarm_items = [
-      new AlarmItem(new AlarmData("14:00 AM", 10)),
-      new AlarmItem(new AlarmData("09:00 PM", 20))
-    ];
-    return alarm_items;
   }
 
   @override
@@ -229,8 +218,10 @@ class MainDialogState extends State<MainDialog> {
             ),
           ],
         ),
-        body: new ListView(
-          children: alarm_items,
+        body: new ListView.builder(
+          itemBuilder: (BuildContext context, int index) => _alarm_items[index],
+          itemExtent: 120.0,
+          itemCount: _alarm_items.length,
         ),
       ),
     );
