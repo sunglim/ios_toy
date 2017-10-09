@@ -66,7 +66,7 @@ class AddNewAlarmDialogState extends State<AddNewAlarmDialog> {
           child: new ListView(
             children: [
               new RaisedButton(
-                  child: new Text(currentTime.toString(),
+                  child: new Text(currentTime.format(context),
                       style:
                           new TextStyle(color: Colors.white, fontSize: 30.5)),
                   color: Colors.grey[850],
@@ -187,7 +187,7 @@ class MainDialogState extends State<MainDialog> {
     _loadAlarmData();
   }
 
-  Future<Map<String, dynamic>> _openAlarmDialog() async {
+  Future<Map<String, dynamic>> _openAlarmDialog(BuildContext context) async {
     Map<String, dynamic> selected_action = await Navigator.push(
         context,
         new MaterialPageRoute<Map<String, dynamic>>(
@@ -196,10 +196,10 @@ class MainDialogState extends State<MainDialog> {
         ));
 
     _data_model.Insert(
-        selected_action["time_of_day"].toString(), selected_action["y"]);
+        selected_action["time_of_day"].format(context), selected_action["y"]);
     setState(() {
       _alarm_items.add(new AlarmItem(new AlarmData(
-          selected_action["time_of_day"].toString(), selected_action["y"])));
+          selected_action["time_of_day"].format(context), selected_action["y"])));
     });
     return selected_action;
   }
@@ -221,7 +221,7 @@ class MainDialogState extends State<MainDialog> {
               icon: new Icon(Icons.add),
               tooltip: 'Add new alarm',
               onPressed: () {
-                _openAlarmDialog();
+                _openAlarmDialog(context);
               },
             ),
           ],
