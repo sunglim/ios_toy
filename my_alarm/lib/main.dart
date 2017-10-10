@@ -166,21 +166,21 @@ class MainDialog extends StatefulWidget {
 }
 
 class MainDialogState extends State<MainDialog> {
-  static const platform = const MethodChannel('samples.flutter.io/battery');
+  static const platform =
+      const MethodChannel('samples.flutter.io/userNotifications');
   // Get battery level.
   String _batteryLevel = 'Unknown battery level.';
   Future<Null> _getBatteryLevel() async {
     String batteryLevel;
     try {
-      final int result = await platform.invokeMethod('getBatteryLevel');
+      final int result = await platform.invokeMethod('requestAuthorization');
       batteryLevel = 'Battery level at $result % .';
     } on PlatformException catch (e) {
       batteryLevel = "Failed to get battery level: '${e.message}'.";
     }
 
     setState(() {
-      _alarm_items.add(new AlarmItem(
-          new AlarmData(batteryLevel, 10)));
+      _alarm_items.add(new AlarmItem(new AlarmData(batteryLevel, 10)));
     });
   }
 
@@ -219,7 +219,8 @@ class MainDialogState extends State<MainDialog> {
         selected_action["time_of_day"].format(context), selected_action["y"]);
     setState(() {
       _alarm_items.add(new AlarmItem(new AlarmData(
-          selected_action["time_of_day"].format(context), selected_action["y"])));
+          selected_action["time_of_day"].format(context),
+          selected_action["y"])));
     });
     return selected_action;
   }

@@ -2,6 +2,7 @@
 #import <Flutter/Flutter.h>
 #include "GeneratedPluginRegistrant.h"
 
+@import UserNotifications;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -10,20 +11,13 @@
   FlutterViewController* controller = (FlutterViewController*)self.window.rootViewController;
 
   FlutterMethodChannel* batteryChannel = [FlutterMethodChannel
-                                          methodChannelWithName:@"samples.flutter.io/battery"
+                                          methodChannelWithName:@"samples.flutter.io/userNotifications"
                                           binaryMessenger:controller];
 
   [batteryChannel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
-    if ([@"getBatteryLevel" isEqualToString:call.method]) {
-      int batteryLevel = [self getBatteryLevel];
-
-      if (batteryLevel == -1) {
-          result([FlutterError errorWithCode:@"UNAVAILABLE"
-                                     message:@"Battery info unavailable"
-                                     details:nil]);
-      } else {
-          result(@(batteryLevel));
-      }
+    if ([@"requestAuthorization" isEqualToString:call.method]) {
+        int batteryLevel = [self registerAuthorization];
+        result(@(batteryLevel));
     } else {
       result(FlutterMethodNotImplemented);
     }
@@ -32,14 +26,15 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (int)getBatteryLevel {
-    UIDevice* device = UIDevice.currentDevice;
-    device.batteryMonitoringEnabled = YES;
-    if (device.batteryState == UIDeviceBatteryStateUnknown) {
-        return -1;
-    } else {
-        return (int)(device.batteryLevel * 100);
-    }
+- (int)registerAuthorization {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert)
+                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                              if (!error) {
+                                  NSLog(@"request authorization succeeded!");
+                              }
+                          }];
+    return 10;
 }
 
 @end
