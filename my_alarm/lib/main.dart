@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'alarm_data_model.dart';
 import 'alarm_item.dart';
@@ -165,6 +166,24 @@ class MainDialog extends StatefulWidget {
 }
 
 class MainDialogState extends State<MainDialog> {
+  static const platform = const MethodChannel('samples.flutter.io/battery');
+  // Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
+  Future<Null> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await platform.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    setState(() {
+      _alarm_items.add(new AlarmItem(
+          new AlarmData(batteryLevel, 10)));
+    });
+  }
+
   AlarmDataModel _data_model = new AlarmDataModel();
 
   final List<AlarmItem> _alarm_items = <AlarmItem>[];
@@ -185,6 +204,7 @@ class MainDialogState extends State<MainDialog> {
   void initState() {
     super.initState();
     _loadAlarmData();
+    _getBatteryLevel();
   }
 
   Future<Map<String, dynamic>> _openAlarmDialog(BuildContext context) async {
