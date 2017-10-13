@@ -16,6 +16,9 @@
     if ([@"requestAuthorization" isEqualToString:call.method]) {
       [self registerAuthorization];
       result(nil);
+    } else if ([@"scheduleNotification" isEqualToString:call.method]) {
+        [self scheduleNotification];
+        result(nil);
     } else {
       result(FlutterMethodNotImplemented);
     }
@@ -43,7 +46,7 @@
     
     // Deliver the notification in five seconds.
     UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                                                  triggerWithTimeInterval:5 repeats:NO];
+                                                  triggerWithTimeInterval:15 repeats:NO];
     UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"FiveSecond"
                                       content:content trigger:trigger];
 

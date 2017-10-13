@@ -207,6 +207,12 @@ class MainDialogState extends State<MainDialog> {
           fullscreenDialog: true,
         ));
 
+    try {
+      print("Invoke scheduleNotification");
+      await platform.invokeMethod('scheduleNotification');
+    } on PlatformException catch (e) {
+    }
+
     _data_model.Insert(
         selected_action["time_of_day"].format(context), selected_action["y"]);
     setState(() {
