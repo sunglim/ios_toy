@@ -17,8 +17,12 @@
       [self registerAuthorization];
       result(nil);
     } else if ([@"scheduleNotification" isEqualToString:call.method]) {
-        [self scheduleNotification];
-        result(nil);
+      NSDateComponents* date = [[NSDateComponents alloc] init];
+      date.hour = ((NSNumber*)call.arguments[@"hour"]).intValue;
+      date.minute = ((NSNumber*)call.arguments[@"minute"]).intValue;
+        
+      [self scheduleNotification:date];
+      result(nil);
     } else {
       result(FlutterMethodNotImplemented);
     }
@@ -37,18 +41,18 @@
                           }];
 }
 
-- (void)scheduleNotification {
+- (void)scheduleNotification:(NSDateComponents *)dateComponent {
     UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
     content.title = [NSString localizedUserNotificationStringForKey:@"Hello!" arguments:nil];
     content.body = [NSString localizedUserNotificationStringForKey:@"Hello_message_body"
                                                          arguments:nil];
     content.sound = [UNNotificationSound defaultSound];
-    
-    // Deliver the notification in five seconds.
-    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                                                  triggerWithTimeInterval:15 repeats:NO];
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"FiveSecond"
-                                      content:content trigger:trigger];
+
+    UNCalendarNotificationTrigger* trigger = [UNCalendarNotificationTrigger
+                                              triggerWithDateMatchingComponents:dateComponent repeats:YES];
+
+    UNNotificationRequest* request = [UNNotificationRequest
+                                      requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
 
     // Schedule the notification.
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];

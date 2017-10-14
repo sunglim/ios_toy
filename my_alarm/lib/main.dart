@@ -209,7 +209,11 @@ class MainDialogState extends State<MainDialog> {
 
     try {
       print("Invoke scheduleNotification");
-      await platform.invokeMethod('scheduleNotification');
+      Map<String, dynamic> time_for_schedule = <String, dynamic>{};
+      time_for_schedule["hour"] = selected_action["time_of_day"].hour;
+      time_for_schedule["minute"] = selected_action["time_of_day"].minute;
+      print(time_for_schedule);
+      await platform.invokeMethod('scheduleNotification', time_for_schedule);
     } on PlatformException catch (e) {
     }
 
