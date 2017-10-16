@@ -180,13 +180,17 @@ class MainDialogState extends State<MainDialog> {
 
   final List<AlarmItem> _alarm_items = <AlarmItem>[];
 
+  void _deleteTaskHandler() {
+    print("delete task handler called");
+  }
+
   Future<Null> _loadAlarmData() async {
     await _data_model.Init();
     List<AlarmItem> alarm_items = <AlarmItem>[];
     _data_model.SelectAll().then((out) {
       out.forEach((element) {
         _alarm_items.add(new AlarmItem(
-            new AlarmData(element["name"].toString(), element["id"])));
+            new AlarmData(element["name"].toString(), element["id"])), () => _deleteTaskHandler());
       });
     });
     setState(() {});

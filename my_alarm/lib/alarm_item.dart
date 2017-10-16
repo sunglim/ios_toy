@@ -9,17 +9,21 @@ class AlarmData {
 }
 
 class AlarmItem extends StatelessWidget {
-  AlarmItem(AlarmData alarm_data) : _alarm_data = alarm_data;
+   AlarmData alarm_data;
+   VoidCallback onDelete;
 
-  AlarmData _alarm_data;
+  AlarmItem(AlarmData alarm_data, VoidCallback onDelete) {
+    this.alarm_data = alarm_data;
+    //this.onDelete = onDelete;
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Dismissible(
-      key: new ObjectKey(_alarm_data),
+      key: new ObjectKey(alarm_data),
       direction: DismissDirection.endToStart,
       onDismissed: (DismissDirection direction) {
-        print("Dismissed called");
+        //onDelete();
       },
       background: new Container(
         child: const Text('dummy'),
@@ -46,7 +50,7 @@ class AlarmItem extends StatelessWidget {
                   new Container(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: new Text(
-                      _alarm_data.time,
+                      alarm_data.time,
                       style: new TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.grey[500],
