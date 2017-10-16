@@ -14,7 +14,7 @@ class AlarmItem extends StatelessWidget {
 
   AlarmItem(AlarmData alarm_data, VoidCallback onDelete) {
     this.alarm_data = alarm_data;
-    //this.onDelete = onDelete;
+    this.onDelete = onDelete;
   }
 
   @override
@@ -23,7 +23,7 @@ class AlarmItem extends StatelessWidget {
       key: new ObjectKey(alarm_data),
       direction: DismissDirection.endToStart,
       onDismissed: (DismissDirection direction) {
-        //onDelete();
+        onDelete();
       },
       background: new Container(
         child: const Text('dummy'),

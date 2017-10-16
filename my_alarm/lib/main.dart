@@ -171,8 +171,7 @@ class MainDialogState extends State<MainDialog> {
   Future<Null> _getBatteryLevel() async {
     try {
       await platform.invokeMethod('requestAuthorization');
-    } on PlatformException catch (e) {
-    }
+    } on PlatformException catch (e) {}
     setState(() {});
   }
 
@@ -189,8 +188,9 @@ class MainDialogState extends State<MainDialog> {
     List<AlarmItem> alarm_items = <AlarmItem>[];
     _data_model.SelectAll().then((out) {
       out.forEach((element) {
-        _alarm_items.add(new AlarmItem(
-            new AlarmData(element["name"].toString(), element["id"])), () => _deleteTaskHandler());
+        _alarm_items.add(new AlarmItem(new AlarmData(
+            element["name"].toString(),
+            element["value"]), () => _deleteTaskHandler()));
       });
     });
     setState(() {});
@@ -218,15 +218,14 @@ class MainDialogState extends State<MainDialog> {
       time_for_schedule["minute"] = selected_action["time_of_day"].minute;
       print(time_for_schedule);
       await platform.invokeMethod('scheduleNotification', time_for_schedule);
-    } on PlatformException catch (e) {
-    }
+    } on PlatformException catch (e) {}
 
     _data_model.Insert(
         selected_action["time_of_day"].format(context), selected_action["y"]);
     setState(() {
       _alarm_items.add(new AlarmItem(new AlarmData(
           selected_action["time_of_day"].format(context),
-          selected_action["y"])));
+          selected_action["y"]), () => _deleteTaskHandler()));
     });
     return selected_action;
   }
