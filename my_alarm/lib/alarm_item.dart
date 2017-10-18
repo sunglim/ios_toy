@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AlarmData {
-  AlarmData(String time, int what)
-      : time = time,
+  AlarmData(int id, String time, int what)
+      : id = id,
+        time = time,
         what = what;
+  final int id;
   final String time;
   final int what;
 }
@@ -20,7 +22,7 @@ class AlarmItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Dismissible(
-      key: new ObjectKey(alarm_data),
+      key: new ObjectKey(alarm_data.id),
       direction: DismissDirection.endToStart,
       onDismissed: (DismissDirection direction) {
         onDelete();

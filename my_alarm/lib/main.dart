@@ -179,8 +179,13 @@ class MainDialogState extends State<MainDialog> {
 
   final List<AlarmItem> _alarm_items = <AlarmItem>[];
 
-  void _deleteTaskHandler() {
-    print("delete task handler called");
+  void _deleteTaskHandler(int id) {
+    print("delete task handler called $id");
+    // Error here.
+    _data_model.Delete(id);
+    setState(() {
+      _alarm_items.removeWhere((item) => item.alarm_data.id == id);
+    });
   }
 
   Future<Null> _loadAlarmData() async {
@@ -188,9 +193,11 @@ class MainDialogState extends State<MainDialog> {
     List<AlarmItem> alarm_items = <AlarmItem>[];
     _data_model.SelectAll().then((out) {
       out.forEach((element) {
+          print(element);
         _alarm_items.add(new AlarmItem(new AlarmData(
+            element["id"],
             element["name"].toString(),
-            element["value"]), () => _deleteTaskHandler()));
+            element["value"]), () => _deleteTaskHandler(element["id"])));
       });
     });
     setState(() {});
@@ -203,6 +210,7 @@ class MainDialogState extends State<MainDialog> {
     _getBatteryLevel();
   }
 
+  // pass current index.
   Future<Map<String, dynamic>> _openAlarmDialog(BuildContext context) async {
     Map<String, dynamic> selected_action = await Navigator.push(
         context,
@@ -220,10 +228,11 @@ class MainDialogState extends State<MainDialog> {
       await platform.invokeMethod('scheduleNotification', time_for_schedule);
     } on PlatformException catch (e) {}
 
-    _data_model.Insert(
+    int new_id = await _data_model.Insert(
         selected_action["time_of_day"].format(context), selected_action["y"]);
     setState(() {
       _alarm_items.add(new AlarmItem(new AlarmData(
+          new_id,
           selected_action["time_of_day"].format(context),
           selected_action["y"]), () => _deleteTaskHandler()));
     });

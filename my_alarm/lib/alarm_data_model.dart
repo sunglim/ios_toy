@@ -14,9 +14,6 @@ class AlarmDataModel {
   // Setup all necesary settings.
   Future<Null> Init() async {
     _database = await _createDbAndTableIfNotExist();
-
-    // TODO(sungguk): Remove when ready;
-    //await Insert("AAAA", 123);
   }
 
   Future<Database> _createDbAndTableIfNotExist() async {
@@ -36,15 +33,16 @@ class AlarmDataModel {
     return database;
   }
 
-  Future<Null> Insert(String name, int data) async {
-    await _database.inTransaction(() async {
-      int id1 = await _database.rawInsert(
-          'INSERT INTO ALARMS(name, value) VALUES("$name", $data)');
-      print("inserted1: $id1");
-    });
+  Future<int> Insert(String name, int data) async {
+    return await _database.rawInsert(
+        'INSERT INTO ALARMS(name, value) VALUES("$name", $data)');
   }
 
   Future<List<Map>> SelectAll() async {
     return await _database.rawQuery('SELECT * FROM ALARMS');
+  }
+
+  Future<Null> Delete(int id) async {
+    await _database.rawDelete('DELETE FROM ALARMS WHERE id = ?', [id]);
   }
 }
