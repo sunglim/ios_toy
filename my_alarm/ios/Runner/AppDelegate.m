@@ -43,11 +43,10 @@
 
 - (void)scheduleNotification:(NSDateComponents *)dateComponent {
     UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString localizedUserNotificationStringForKey:@"Hello!" arguments:nil];
-    content.body = [NSString localizedUserNotificationStringForKey:@"Hello_message_body"
+    content.title = [NSString localizedUserNotificationStringForKey:@"Alarm!" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:@"Wake up"
                                                          arguments:nil];
-    content.sound = [UNNotificationSound defaultSound];
-
+    content.sound = [UNNotificationSound soundNamed:@"alarm.mp3"];
     UNCalendarNotificationTrigger* trigger = [UNCalendarNotificationTrigger
                                               triggerWithDateMatchingComponents:dateComponent repeats:YES];
 
